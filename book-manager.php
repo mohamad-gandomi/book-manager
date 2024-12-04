@@ -11,16 +11,16 @@
  * Version:         1.0.0
  */
 
-namespace RabbitExamplePlugin;
+namespace RabbitBookManager;
 
 use Rabbit\Application;
+use Rabbit\Redirects\RedirectServiceProvider;
 use Rabbit\Database\DatabaseServiceProvider;
 use Rabbit\Logger\LoggerServiceProvider;
 use Rabbit\Plugin;
 use Rabbit\Redirects\AdminNotice;
 use Rabbit\Templates\TemplatesServiceProvider;
 use Rabbit\Utils\Singleton;
-use Exception;
 use League\Container\Container;
 
 if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
@@ -28,10 +28,10 @@ if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
 }
 
 /**
- * Class RabbitExamplePlugin
- * @package RabbitExamplePlugin
+ * Class RabbitBookManager
+ * @package RabbitBookManager
  */
-class RabbitExamplePlugin extends Singleton
+class RabbitBookManager extends Singleton
 {
     /**
      * @var Container
@@ -65,7 +65,19 @@ class RabbitExamplePlugin extends Singleton
              * Activation hooks
              */
             $this->application->onActivation(function () {
-                // Create tables or something else
+                global $wpdb;
+                $table_name = $wpdb->prefix . 'books_info';
+
+                $charset_collate = $wpdb->get_charset_collate();
+                $sql = "CREATE TABLE $table_name (
+                    ID BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                    post_id BIGINT UNSIGNED NOT NULL,
+                    isbn VARCHAR(13) NOT NULL,
+                    UNIQUE KEY isbn (isbn)
+                ) $charset_collate;";
+
+                require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+                dbDelta($sql);
             });
 
             /**
@@ -77,11 +89,6 @@ class RabbitExamplePlugin extends Singleton
 
             $this->application->boot(function (Plugin $plugin) {
                 $plugin->loadPluginTextDomain();
-
-                // load template
-                $this->application->view('plugin-template.php', ['foo' => 'bar']);
-                ///...
-
             });
 
         } catch (Exception $e) {
@@ -113,13 +120,13 @@ class RabbitExamplePlugin extends Singleton
 }
 
 /**
- * Returns the main instance of RabbitExamplePlugin.
- * @return RabbitExamplePlugin
+ * Returns the main instance of RabbitBookManager.
+ * @return RabbitBookManager
  */
-function RabbitExamplePlugin()
+function RabbitBookManager()
 {
-    return RabbitExamplePlugin::get();
+    return RabbitBookManager::get();
 }
 
-RabbitExamplePlugin();
+RabbitBookManager();
 
