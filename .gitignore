@@ -1,0 +1,17 @@
+# Ignore unnecessary files and folders
+/vendor/
+/node_modules/
+composer.lock
+package-lock.json
+
+# IDE and system files
+.idea/
+.vscode/
+*.log
+.DS_Store
+Thumbs.db
+
+# Backup and temporary files
+*.bak
+*.tmp
+*.swp
