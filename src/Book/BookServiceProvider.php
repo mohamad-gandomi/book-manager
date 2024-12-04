@@ -114,11 +114,27 @@ private function registerMetaBox()
                 __('Books Info', 'book-manager'),
                 'manage_options',
                 'books-info',
-                function () {
-                    echo '<h1>' . __('Books Information', 'book-manager') . '</h1>';
-                }
+                [$this, 'display_books_info'],
+                'dashicons-book',
             );
         });
+    }
+
+    public function display_books_info()
+    {
+        // Include the custom table class and display it
+        $table = new BookInfoTable();
+        $table->prepare_items();
+        ?>
+        <div class="wrap">
+            <h1 class="wp-heading-inline"><?php _e('Books Information', 'book-manager'); ?></h1>
+            <form method="post">
+                <?php
+                $table->display();
+                ?>
+            </form>
+        </div>
+        <?php
     }
 
     public function bootPlugin()
