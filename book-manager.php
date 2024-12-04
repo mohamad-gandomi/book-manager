@@ -22,6 +22,7 @@ use Rabbit\Redirects\AdminNotice;
 use Rabbit\Templates\TemplatesServiceProvider;
 use Rabbit\Utils\Singleton;
 use League\Container\Container;
+use RabbitBookManager\Book\BookServiceProvider;
 
 if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
     require dirname(__FILE__) . '/vendor/autoload.php';
@@ -59,7 +60,7 @@ class RabbitBookManager extends Singleton
             $this->application->addServiceProvider(TemplatesServiceProvider::class);
             $this->application->addServiceProvider(LoggerServiceProvider::class);
             // Load your own service providers here...
-
+            $this->application->addServiceProvider(BookServiceProvider::class);
 
             /**
              * Activation hooks
